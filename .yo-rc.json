@@ -1,0 +1,7 @@
+{
+  "generator-react-webpack": {
+    "appName": "ezrb",
+    "style": "scss",
+    "postcss": true
+  }
+}
