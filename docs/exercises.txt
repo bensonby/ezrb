@@ -1,0 +1,94 @@
+setting for every exercise:
+- tutorial object to show
+- instant feedback?
+- need submission?
+- second to wait for if no submission needed
+- moves locked
+- illustration cube on the right?
+- show demo (illustration cube)
+
+exercises, state:
+- with overlay hints showing what to do
+- what to do
+
+always an illustration cube at the side
+
+
+   left right
+
+      67 (rotate/glance up) need to glance??
+    R   U
+AS DFG HJK L; (glance)
+  X     NM< (rotate cube)
+glance left*2 / left, glance right right *2
+
+0. Introduction
+
+A 3x3x3 Rubik's Cube has six faces, each with a different color.",
+There are 3 types of pieces: center pieces, edge pieces, and corner pieces.",
+The center pieces are \"fixed\". They won't move relatively to each other.",
+On a scrambled cube, the center pieces indicate the correct colors on each face.",
+Each piece has its own single correct position, restricted by its colors and the center pieces.",
+Controlling the Rubik's Cube with keyboard follows closely how one hold and turn a cube. It gives a more pleasant user experience as you follow through this guide.
+
+exercise:
+- follow as the illustration cube moves
+- click on where the highlighted piece should go to
+
+1. first cross
+   - move one in top layer to make it correct (no glance necessary)
+   - move one in top layer to a further place (need glance/rotate cube)
+   - move the remaining piece to the top cross from middle layer (when 3 are correct) - direct
+   - move the remaining piece to the top cross from middle layer (when 3 are correct) - at another pos
+   - move a second piece from middle layer to top - direct
+   - move a second piece from middle layer to top - at another pos
+   - move a piece from bottom to middle (simple), free to move -> then to the correct position
+   - move a piece from bottom to middle (harder, 2 correct)
+   - move a piece from bottom to middle (hardest, i.e. final piece, 3 correct)
+   - move a wrong piece from top layer down
+   - 3 top pieces with either 1 correct or 2 correct, fix these 3
+   - final -> produce the cross
+2. middle-layer edges
+   - top piece aligned, right hand side
+   - same for left hand side
+   - ask to do one piece in top layer (reminding to think left/right side)
+   - do another one (other side)
+   - unlucky case, move arbitrary one from top to middle to swap
+   - final -> produce the middle layer
+3. top-layer edges
+   - move middle layer to top (color correct)
+   - move middle layer to top (color incorrect)
+   - move middle layer to top + choose a good piece down
+   - middle layer is itself, move arbitrarily
+   - intermediate -> produce >= 3 top edges
+   - final two edges, 3 practices
+   - final two edges unlucky case
+   - final -> produce 4 edges
+4. corners
+   - put one corner to its top
+   - mirrored
+   - put one corner to the other top position
+   - mirrored
+   - more practice * 3 (guided, asking to put that piece)
+   - find a suitable face, and make 4 correct corners
+   - selecting a good piece down
+     - case 1 having both top/facing
+     - case 2 only top
+     - case 3 only facing
+   - selecting a good piece down (mirrored)
+     - case 1 having both top/facing
+     - case 2 only top
+     - case 3 only facing
+   - intermediate -> produce >= 6 corners
+5. final corners
+   - (first state objective - same method for moving corners, but think which/where to move)
+   - place the cube correctly (selecting a top face)
+     - 2 exercises (need confirmation)
+   - move the top layer, such that same vertical layer and top color facing u (like how u select good piece)
+     - 4 exercises (need confirmation)
+   - rotate the correct face
+     - 3 exercises
+   - step one
+     - 5 exercises
+   - step two
+     - 4 exercises
