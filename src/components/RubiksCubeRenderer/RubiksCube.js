@@ -8,10 +8,13 @@ import textureRed from '../../../assets/texture_red.png';
 import textureBlue from '../../../assets/texture_blue.png';
 import textureGreen from '../../../assets/texture_green.png';
 
+
 var RubiksCube = class {
-  constructor() {
-    this.previousState = null;
-    this.currentState = null;
+  constructor(currentState) {
+    this.loaded = false;
+    this.previousState = {};
+    this.currentState = currentState;
+    this.processedMovesWalker = -1;
     this.meshes = [];
     this.holder = new THREE.Object3D();
     this.scene = new THREE.Scene();
@@ -60,6 +63,25 @@ var RubiksCube = class {
       {colors: [4, 0, 3, 0, 6, 0], positions: [ 1,  1,  1]},
     ];
 
+    this.moveAttributes = {
+      'R': {dimension: 'x', filterValue:    1, rotationSign: -1, rotationEnd: Math.PI / 2},
+      'U': {dimension: 'y', filterValue:    1, rotationSign: -1, rotationEnd: Math.PI / 2},
+      'F': {dimension: 'z', filterValue:    1, rotationSign: -1, rotationEnd: Math.PI / 2},
+      'L': {dimension: 'x', filterValue:   -1, rotationSign:  1, rotationEnd: Math.PI / 2},
+      'D': {dimension: 'y', filterValue:   -1, rotationSign:  1, rotationEnd: Math.PI / 2},
+      'B': {dimension: 'z', filterValue:   -1, rotationSign:  1, rotationEnd: Math.PI / 2},
+      'r': {dimension: 'x', filterValue:    1, rotationSign:  1, rotationEnd: Math.PI / 2},
+      'u': {dimension: 'y', filterValue:    1, rotationSign:  1, rotationEnd: Math.PI / 2},
+      'f': {dimension: 'z', filterValue:    1, rotationSign:  1, rotationEnd: Math.PI / 2},
+      'l': {dimension: 'x', filterValue:   -1, rotationSign: -1, rotationEnd: Math.PI / 2},
+      'd': {dimension: 'y', filterValue:   -1, rotationSign: -1, rotationEnd: Math.PI / 2},
+      'b': {dimension: 'z', filterValue:   -1, rotationSign: -1, rotationEnd: Math.PI / 2},
+      ',': {dimension: 'y', filterValue: null, rotationSign: -1, rotationEnd: Math.PI / 2},
+      'x': {dimension: 'y', filterValue: null, rotationSign:  1, rotationEnd: Math.PI / 2},
+      '6': {dimension: 'x', filterValue: null, rotationSign:  1, rotationEnd: Math.PI / 2},
+      'n': {dimension: 'x', filterValue: null, rotationSign: -1, rotationEnd: Math.PI / 2},
+    };
+
     const loader = new THREE.TextureLoader();
 
     this.textureImages.forEach(function(texture, colorIndex) {
@@ -87,12 +109,15 @@ var RubiksCube = class {
     document.querySelector('#canvas-holder').appendChild(this.renderer.domElement);
 
     this.initializeCubes();
+    this.processInitialMoves();
 
     this.loop();
   }
 
   initializeCubes() {
     const geometry = new THREE.BoxGeometry( 1, 1, 1 );
+
+    this.scene.add(this.holder);
 
     for (let i = 0; i < this.cubeAttributes.length; i++ ) {
       const colors = this.cubeAttributes[i].colors.map(
@@ -109,9 +134,58 @@ var RubiksCube = class {
         this.cubeAttributes[i].positions[2]
       );
       this.scene.add(this.meshes[i]);
-      this.holder.add(this.meshes[i]);
     }
-    this.scene.add(this.holder);
+    this.loaded = true;
+  }
+
+  processInitialMoves() {
+    for (let move of this.currentState.initialMoves) {
+      const {
+        dimension,
+        filterValue,
+        rotationSign,
+        rotationEnd,
+      } = this.moveAttributes[move];
+
+      const cubeIds = this.getCubeIds(dimension, filterValue);
+
+      if(cubeIds.length !== 9 && cubeIds.length !== 27) {  //TODO: dynamic size?
+        console.log('invalid move: ' + move + '\n cubeIds:');
+        console.log(cubeIds);
+        return;
+      }
+      this.setCubesInHolder(cubeIds);
+      this.holder.rotation[dimension] = rotationSign * rotationEnd;
+      this.detachAllCubesFromHolder();
+    }
+  }
+
+  getCubeIds(dimension, filterValue) {
+    const selectedCubeIds = [];
+    for (let i = 0; i < this.meshes.length; i++) {
+      if(filterValue == null || (Math.round(this.meshes[i].position[dimension]) === filterValue)){
+        selectedCubeIds.push(i);
+      }
+    }
+    return selectedCubeIds;
+  }
+
+  setCubesInHolder(cubeIds) {
+    this.scene.updateMatrixWorld();
+    for (let cubeId of cubeIds) {
+      THREE.SceneUtils.attach(this.meshes[cubeId], this.scene, this.holder);
+    }
+  }
+
+  detachAllCubesFromHolder() {
+    this.scene.updateMatrixWorld();
+    for (let i = 0; i < this.meshes.length; i++) {
+      if (!this.meshes[i].parent || this.meshes[i].parent.type === 'Scene') {
+        continue;
+      }
+      THREE.SceneUtils.detach(this.meshes[i], this.holder, this.scene);
+    }
+    this.resetHolder();
   }
 
   loop() {
@@ -121,7 +195,7 @@ var RubiksCube = class {
   }
 
   update() {
-    this.holder.rotation.x += 0.01;
+    // this.holder.rotation.x += 0.01;
   }
 
   render() {
@@ -129,8 +203,39 @@ var RubiksCube = class {
   }
 
   updateState(state) {
+    if (!this.loaded) return;
     this.previousState = this.currentState;
     this.currentState = state;
+
+    if (this.previousState !== {} && this.currentState.initialMoves !== this.previousState.initialMoves) {
+      this.reset();
+      this.processInitialMoves();
+    }
+  }
+
+  resetHolder() {
+    if(this.holder) {
+      this.holder.rotation.x = 0;
+      this.holder.rotation.y = 0;
+      this.holder.rotation.z = 0;
+      this.holder.position.x = 0;
+      this.holder.position.y = 0;
+      this.holder.position.z = 0;
+    }
+  }
+
+  reset() {
+    if (!this.loaded) return;
+    this.detachAllCubesFromHolder();
+    for (let i = 0; i < this.cubeAttributes.length; i++) {
+      this.meshes[i].position.set(
+        this.cubeAttributes[i].positions[0],
+        this.cubeAttributes[i].positions[1],
+        this.cubeAttributes[i].positions[2]
+      )
+      this.meshes[i].rotation.set(0, 0, 0);
+    }
+    this.processedMovesWalker = -1;
   }
 
 };

@@ -5,16 +5,17 @@ import React from 'react';
 
 import RubiksCubeRenderer from './RubiksCubeRenderer/RubiksCubeRenderer';
 
-class AppComponent extends React.Component {
+class RubikCubePanel extends React.Component {
   render() {
+    const {
+      cube,
+    } = this.props;
+
     return (
-      <RubiksCubeRenderer {...this.props}>
+      <RubiksCubeRenderer cube={cube}>
       </RubiksCubeRenderer>
     );
   }
 }
 
-AppComponent.defaultProps = {
-};
-
-export default AppComponent;
+export default RubikCubePanel;

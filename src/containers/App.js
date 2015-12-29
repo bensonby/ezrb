@@ -10,14 +10,19 @@ import React, {
 } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import Main from '../components/Main';
+import RubikCubePanel from '../components/RubikCubePanel';
+
 /* Populated by react-webpack-redux:reducer */
 class App extends Component {
   render() {
-    const {actions} = this.props;
-    // return <Main actions={actions}/>;
+    const {
+      cube,
+    } = this.props;
+
     return (
-      <Main action={actions} />
+      <div>
+        <RubikCubePanel cube={cube} />
+      </div>
     );
   }
 }
@@ -29,9 +34,11 @@ class App extends Component {
 App.propTypes = {
   actions: PropTypes.object.isRequired,
 };
-function mapStateToProps(/*state*/) {
+function mapStateToProps(state) {
   /* Populated by react-webpack-redux:reducer */
-  const props = {};
+  const props = {
+    'cube': state.cube,
+  };
   return props;
 }
 function mapDispatchToProps(dispatch) {

@@ -8,8 +8,12 @@
  */
 
 import tutorial from './tutorial';
+import cube from './cube';
 
 import { combineReducers } from 'redux';
 /* Populated by react-webpack-redux:reducer */
-const reducers = {tutorial};
+const reducers = {
+  tutorial,
+  cube,
+};
 module.exports = combineReducers(reducers);
