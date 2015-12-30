@@ -15,6 +15,11 @@ export default function(state = defaultState, action) {
       'initialMoves': [],
       'moves': [],
     });
+  case CUBE.SET_INITIAL_MOVES:
+    return _.assign({}, state, {
+      'initialMoves': action.initialMoves,
+      'moves': [],
+    });
   default:
     return state;
   }

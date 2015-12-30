@@ -29,14 +29,18 @@ class App extends Component {
         'cube': {
           addMove,
           reset,
+          setInitialMoves,
         },
       },
     } = this.props;
 
     return (
       <Grid>
-        <RubiksCubeControls reset={reset} />
-        <RubikCubePanel cube={cube} addMove={addMove} />
+        <RubiksCubeControls
+          addMove={addMove}
+          reset={reset}
+          setInitialMoves={setInitialMoves} />
+        <RubikCubePanel cube={cube} />
       </Grid>
     );
   }

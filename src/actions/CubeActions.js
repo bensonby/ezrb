@@ -12,3 +12,10 @@ export function reset() {
     'type': CUBE.RESET,
   };
 }
+
+export function setInitialMoves(initialMoves) {
+  return {
+    'type': CUBE.SET_INITIAL_MOVES,
+    'initialMoves': initialMoves,
+  };
+}
