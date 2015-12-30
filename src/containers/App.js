@@ -13,7 +13,12 @@ import { connect } from 'react-redux';
 
 import * as CubeActions from '../actions/CubeActions';
 
+import {
+  Grid,
+} from 'react-bootstrap/lib/';
+
 import RubikCubePanel from '../components/RubikCubePanel';
+import RubiksCubeControls from '../components/RubiksCubeControls';
 
 /* Populated by react-webpack-redux:reducer */
 class App extends Component {
@@ -23,14 +28,16 @@ class App extends Component {
       'actions': {
         'cube': {
           addMove,
+          reset,
         },
       },
     } = this.props;
 
     return (
-      <div>
+      <Grid>
+        <RubiksCubeControls reset={reset} />
         <RubikCubePanel cube={cube} addMove={addMove} />
-      </div>
+      </Grid>
     );
   }
 }

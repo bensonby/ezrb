@@ -53,7 +53,8 @@ module.exports = {
       },
       {
         test: /\.scss/,
-        loader: 'style-loader!css-loader!postcss-loader!sass-loader?outputStyle=expanded'
+        loader: 'style-loader!css-loader!postcss-loader!sass-loader?outputStyle=expanded',
+        exclude: /libs\.scss$/
       },
       {
         test: /\.less/,
@@ -62,6 +63,10 @@ module.exports = {
       {
         test: /\.styl/,
         loader: 'style-loader!css-loader!postcss-loader!stylus-loader'
+      },
+      {
+        test: /\.woff2?$|\.woff(\?.*)?$|\.ttf(\?.*)?$|\.eot(\?.*)?$|\.svg(\?.*)?$/,
+        loader: 'file-loader',
       },
       {
         test: /\.(png|jpg|gif|woff|woff2)$/,

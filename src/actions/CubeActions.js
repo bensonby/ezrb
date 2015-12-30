@@ -6,3 +6,9 @@ export function addMove(move) {
     'move': move,
   };
 }
+
+export function reset() {
+  return {
+    'type': CUBE.RESET,
+  };
+}
