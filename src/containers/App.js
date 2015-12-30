@@ -10,6 +10,9 @@ import React, {
 } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+
+import * as CubeActions from '../actions/CubeActions';
+
 import RubikCubePanel from '../components/RubikCubePanel';
 
 /* Populated by react-webpack-redux:reducer */
@@ -17,11 +20,16 @@ class App extends Component {
   render() {
     const {
       cube,
+      'actions': {
+        'cube': {
+          addMove,
+        },
+      },
     } = this.props;
 
     return (
       <div>
-        <RubikCubePanel cube={cube} />
+        <RubikCubePanel cube={cube} addMove={addMove} />
       </div>
     );
   }
@@ -43,8 +51,12 @@ function mapStateToProps(state) {
 }
 function mapDispatchToProps(dispatch) {
   /* Populated by react-webpack-redux:action */
-  const actions = {};
-  const actionMap = { actions: bindActionCreators(actions, dispatch) };
+
+  const actionMap = {
+    'actions': {
+      'cube': bindActionCreators(CubeActions, dispatch),
+    },
+  };
   return actionMap;
 }
 export default connect(mapStateToProps, mapDispatchToProps)(App);

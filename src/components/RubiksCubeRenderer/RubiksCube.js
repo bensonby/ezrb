@@ -15,11 +15,13 @@ var RubiksCube = class {
     this.previousState = {};
     this.currentState = currentState;
     this.processedMovesWalker = -1;
+    this.currentMoveWalker = -1;
     this.meshes = [];
     this.holder = new THREE.Object3D();
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera( 30, 1, 0.1, 1000 );
     this.renderer = new THREE.WebGLRenderer();
+    this.rotationSpeed = 0.05;
 
     this.textureImages = [
       textureBlack,
@@ -195,7 +197,39 @@ var RubiksCube = class {
   }
 
   update() {
-    // this.holder.rotation.x += 0.01;
+    if (this.currentMoveWalker === this.processedMovesWalker) {
+      if (this.processedMovesWalker >= this.currentState.moves.length - 1) return;
+      this.currentMoveWalker++;
+      const currentMove = this.currentState.moves[this.processedMovesWalker + 1];
+      const {
+        dimension,
+        filterValue,
+      } = this.moveAttributes[currentMove];
+      const cubeIds = this.getCubeIds(dimension, filterValue);
+      if(cubeIds.length !== 9 && cubeIds.length !== 27) {  //TODO: dynamic size?
+        console.log('invalid move: ' + currentMove + '\n cubeIds:');
+        console.log(cubeIds);
+        return;  // TODO: how to handle error?
+      }
+      this.setCubesInHolder(cubeIds);
+    }
+    const currentMove = this.currentState.moves[this.currentMoveWalker];
+    const {
+      rotationSign,
+      rotationEnd,
+      dimension,
+    } = this.moveAttributes[currentMove];
+
+    const currentRotation = this.holder.rotation[dimension];
+
+    if( (rotationSign ==  1 && currentRotation + rotationSign * this.rotationSpeed > rotationSign * rotationEnd) ||
+        (rotationSign == -1 && currentRotation + rotationSign * this.rotationSpeed < rotationSign * rotationEnd) ) {
+      this.holder.rotation[dimension] = rotationSign * rotationEnd;
+      this.detachAllCubesFromHolder();
+      this.processedMovesWalker++;
+    }else{
+      this.holder.rotation[dimension] += rotationSign * this.rotationSpeed;
+    }
   }
 
   render() {
@@ -236,6 +270,7 @@ var RubiksCube = class {
       this.meshes[i].rotation.set(0, 0, 0);
     }
     this.processedMovesWalker = -1;
+    this.currentMoveWalker = -1;
   }
 
 };
