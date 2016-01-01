@@ -14,7 +14,7 @@ import {
   Button,
 } from 'react-bootstrap/lib/';
 
-import {keyToCubeMove} from '../constants/ControlKeys';
+import {KEY_TO_CUBE_MOVE} from '../constants/Cube';
 
 
 class RubiksCubeControl extends Component {
@@ -23,8 +23,8 @@ class RubiksCubeControl extends Component {
   }
 
   rotateCubeHandler(e) {
-    if (e.keyCode in keyToCubeMove) {
-      this.props.addMove(keyToCubeMove[e.keyCode]);
+    if (e.keyCode in KEY_TO_CUBE_MOVE) {
+      this.props.addMove(KEY_TO_CUBE_MOVE[e.keyCode]);
     }
   }
 
@@ -51,7 +51,7 @@ class RubiksCubeControl extends Component {
 
   scramble() {
     const {setInitialMoves} = this.props;
-    const possibleMoves = _.values(keyToCubeMove);
+    const possibleMoves = _.values(KEY_TO_CUBE_MOVE);
     const randomMoves = [];
     for (let i = 0; i < 100; i++) {
       randomMoves.push(possibleMoves[getRandomInt(0, possibleMoves.length - 1)]);
