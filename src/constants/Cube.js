@@ -125,35 +125,35 @@ export const CUBES = [
 
 export const MOVE_DEFINITIONS = {
   'U': {
-    'cubeFilter': {'face': [FACE.U]},
+    'cubeFilter': {'faceFilter': [{[FACE.U]: {}}]},
     'faceChange': {[FACE.B]: FACE.R, [FACE.R]: FACE.F, [FACE.F]: FACE.L, [FACE.L]: FACE.B},
   },
   'u': {
-    'cubeFilter': {'face': [FACE.U]},
+    'cubeFilter': {'faceFilter': [{[FACE.U]: {}}]},
     'faceChange': {[FACE.R]: FACE.B, [FACE.F]: FACE.R, [FACE.L]: FACE.F, [FACE.B]: FACE.L},
   },
   'D': {
-    'cubeFilter': {'face': [FACE.D]},
+    'cubeFilter': {'faceFilter': [{[FACE.D]: {}}]},
     'faceChange': {[FACE.R]: FACE.B, [FACE.F]: FACE.R, [FACE.L]: FACE.F, [FACE.B]: FACE.L},
   },
   'd': {
-    'cubeFilter': {'face': [FACE.D]},
+    'cubeFilter': {'faceFilter': [{[FACE.D]: {}}]},
     'faceChange': {[FACE.B]: FACE.R, [FACE.R]: FACE.F, [FACE.F]: FACE.L, [FACE.L]: FACE.B},
   },
   'R': {
-    'cubeFilter': {'face': [FACE.R]},
+    'cubeFilter': {'faceFilter': [{[FACE.R]: {}}]},
     'faceChange': {[FACE.U]: FACE.B, [FACE.B]: FACE.D, [FACE.D]: FACE.F, [FACE.F]: FACE.U},
   },
   'r': {
-    'cubeFilter': {'face': [FACE.R]},
+    'cubeFilter': {'faceFilter': [{[FACE.R]: {}}]},
     'faceChange': {[FACE.B]: FACE.U, [FACE.D]: FACE.B, [FACE.F]: FACE.D, [FACE.U]: FACE.F},
   },
   'L': {
-    'cubeFilter': {'face': [FACE.L]},
+    'cubeFilter': {'faceFilter': [{[FACE.L]: {}}]},
     'faceChange': {[FACE.B]: FACE.U, [FACE.D]: FACE.B, [FACE.F]: FACE.D, [FACE.U]: FACE.F},
   },
   'l': {
-    'cubeFilter': {'face': [FACE.L]},
+    'cubeFilter': {'faceFilter': [{[FACE.L]: {}}]},
     'faceChange': {[FACE.U]: FACE.B, [FACE.B]: FACE.D, [FACE.D]: FACE.F, [FACE.F]: FACE.U},
   },
   ',': {

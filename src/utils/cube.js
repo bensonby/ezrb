@@ -1,0 +1,116 @@
+import _ from 'lodash';
+/*
+  Example Filters:
+  1. any pieces that have both RIGHT and UP faces, where the UP face is either yellow or blue
+  {
+    'faceFilter': [
+      {
+        [FACE.R]: {},
+        [FACE.U]: {'colors': [COLOR.YELLOW, COLOR.BLUE]},
+      }
+    ],
+  },
+  2. any edge at the top layer without white color
+  {
+    'type': 'edge',
+    'faceFilter': [
+      {
+        [FACE.U]: {},
+      }
+    ],
+    'colorFilter': {
+      [COLOR.WHITE]: false, // true for having it in either face of the cube
+    },
+  },
+  3. any corner at the top layer with white color on UP or FRONT face, which is at its correct position
+  {
+    'type': 'corner',
+    'faceFilter': [
+      {
+        [FACE.U]: {'colors': [COLOR.WHITE]},
+        [FACE.F]: {},
+      },
+      {
+        [FACE.U]: {},
+        [FACE.F]: {'colors': [COLOR.WHITE]},
+      },
+    ],
+    'correct': false,
+  }
+  4. any edge in the middle layer (not UP nor DOWN)
+  {
+    'type': 'edge',
+    'faceFilter': [
+      {
+        [FACE.U]: {'notExisted': true},
+        [FACE.D]: {'notExisted': true},
+      }
+    ]
+  }
+*/
+export function filterCubes(cubes, filter) {
+  const matchedCubes = [];
+  const unmatchedCubes = [];
+  for (let cube of cubes) {
+    if (isMatched(cubes, filter, cube)) {
+      matchedCubes.push(cube);
+    } else {
+      unmatchedCubes.push(cube);
+    }
+  }
+  return {matchedCubes, unmatchedCubes};
+}
+
+function isMatched(cubes, filter, cube) {
+  if ('faceFilter' in filter) {
+    for (let faceFilter of filter.faceFilter) {
+      for (let face in faceFilter) {
+        const filters = faceFilter[face];
+        if (!('notExisted' in filters) && !(face in cube.faceColors)) {
+          return false;
+        }
+        if ('notExisted' in filters && face in cube.faceColors) {
+          return false;
+        }
+        if (filters.colors) {
+          if (filters.colors.indexOf(cube.faceColors[face]) === -1) {
+            return false;
+          }
+        }
+      }
+    }
+  }
+  if ('type' in filter) {
+    if (filter.type.indexOf(cube.type) === -1) {
+      return false;
+    }
+  }
+  if ('correct' in filter) {
+    let correct = true;
+    for (let face in cube.faceColors) {
+      const color = cube.faceColors[face];
+      const centerCube = findCenterCube(cubes, face);
+      if (color !== centerCube.faceColors[face]) {
+        correct = false;
+      }
+    }
+    if (filter.correct && !correct) return false;
+    if (!filter.correct && correct) return false;
+  }
+  if ('colorFilter' in filter) {
+    for (let color in filter.colorFilter) {
+      const colorExisted = (_.values(cube.faceColors).indexOf(color) !== -1);
+      if (filter.colorFilter[color] && !colorExisted) return false;
+      if (!filter.colorFilter[color] && colorExisted) return false;
+    }
+  }
+  return true;
+}
+
+export function findCenterCube(cubes, face) {
+  const filter = {
+    'type': 'center',
+    'faceFilter': [{[face]: {}}],
+  };
+  return filterCubes(cubes, filter)['matchedCubes'][0];
+}
