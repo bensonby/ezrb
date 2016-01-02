@@ -37,15 +37,25 @@ class RubiksCubeControl extends Component {
   render() {
     const {
       reset,
+      solve,
+      moves,
     } = this.props;
 
     return (
-      <Row>
-        <Col xs={12}>
-          <Button bsStyle="danger" onClick={reset}>Reset</Button>
-          <Button bsStyle="danger" onClick={this.scramble}>Scramble</Button>
-        </Col>
-      </Row>
+      <div>
+        <Row>
+          <Col xs={12}>
+            <Button bsStyle="danger" onClick={reset}>Reset</Button>
+            <Button bsStyle="danger" onClick={this.scramble}>Scramble</Button>
+            <Button bsStyle="danger" onClick={solve}>Solve</Button>
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12}>
+            Moves: {moves}
+          </Col>
+        </Row>
+      </div>
     );
   }
 

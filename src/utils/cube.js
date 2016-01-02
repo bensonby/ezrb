@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import * as CUBE_CONSTANTS from '../constants/Cube';
 /*
   Example Filters:
   1. any pieces that have both RIGHT and UP faces, where the UP face is either yellow or blue
@@ -48,6 +49,23 @@ import _ from 'lodash';
     ]
   }
 */
+
+export function processMove(cubes, move) {
+  const {cubeFilter, faceChange} = CUBE_CONSTANTS.MOVE_DEFINITIONS[move];
+  const {matchedCubes, unmatchedCubes} = filterCubes(cubes, cubeFilter);
+  const newCubes = unmatchedCubes;
+  for (let cube of matchedCubes) {
+    newCubes.push({
+      'type': cube.type,
+      'faceColors': _.mapKeys(cube.faceColors, function(color, face) {
+        if (!faceChange[face]) return face;
+        return faceChange[face];
+      }),
+    });
+  }
+  return newCubes;
+}
+
 export function filterCubes(cubes, filter) {
   const matchedCubes = [];
   const unmatchedCubes = [];
@@ -113,4 +131,22 @@ export function findCenterCube(cubes, face) {
     'faceFilter': [{[face]: {}}],
   };
   return filterCubes(cubes, filter)['matchedCubes'][0];
+}
+
+export function oppositeMove(move) {
+  const map = {
+    'R': 'r',
+    'r': 'R',
+    'U': 'u',
+    'd': 'D',
+    'l': 'L',
+    'L': 'l',
+    'D': 'd',
+    'u': 'U',
+    ',': 'x',
+    '6': 'n',
+    'n': '6',
+    'x': ',',
+  };
+  return map[move];
 }

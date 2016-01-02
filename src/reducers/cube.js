@@ -1,7 +1,8 @@
 import _ from 'lodash';
 import {CUBE} from '../constants/ActionTypes';
 import * as CUBE_CONSTANTS from '../constants/Cube';
-import {filterCubes} from '../utils/cube';
+import {solveFirstCross} from '../utils/solver/firstCross';
+import {processMove} from '../utils/cube';
 
 const defaultState = {
   'initialMoves': [],
@@ -32,23 +33,21 @@ export default function(state = defaultState, action) {
       'moves': [],
       'cubes': cubes,
     });
+  case CUBE.SOLVE:
+    const moves = (
+      solveFirstCross(state.cubes) ||
+      []
+    );
+    let newCube = state.cubes.slice();
+    for (let move of moves) {
+      newCube = processMove(newCube, move);
+    }
+    return _.assign({}, state, {
+      'moves': [...state.moves, ...moves],
+      'cubes': newCube,
+    });
+
   default:
     return state;
   }
-}
-
-function processMove(cubes, move) {
-  const {cubeFilter, faceChange} = CUBE_CONSTANTS.MOVE_DEFINITIONS[move];
-  const {matchedCubes, unmatchedCubes} = filterCubes(cubes, cubeFilter);
-  const newCubes = unmatchedCubes;
-  for (let cube of matchedCubes) {
-    newCubes.push({
-      'type': cube.type,
-      'faceColors': _.mapKeys(cube.faceColors, function(color, face) {
-        if (!faceChange[face]) return face;
-        return faceChange[face];
-      }),
-    });
-  }
-  return newCubes;
 }

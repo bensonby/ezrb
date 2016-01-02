@@ -29,6 +29,7 @@ class App extends Component {
         'cube': {
           addMove,
           reset,
+          solve,
           setInitialMoves,
         },
       },
@@ -37,8 +38,10 @@ class App extends Component {
     return (
       <Grid>
         <RubiksCubeControls
+          moves={cube.moves}
           addMove={addMove}
           reset={reset}
+          solve={solve}
           setInitialMoves={setInitialMoves} />
         <RubikCubePanel cube={cube} />
       </Grid>

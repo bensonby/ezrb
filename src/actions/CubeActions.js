@@ -19,3 +19,9 @@ export function setInitialMoves(initialMoves) {
     'initialMoves': initialMoves,
   };
 }
+
+export function solve() {
+  return {
+    'type': CUBE.SOLVE,
+  }
+}
