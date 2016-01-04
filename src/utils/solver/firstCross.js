@@ -1,8 +1,34 @@
 import _ from 'lodash';
 import {FACE} from '../../constants/Cube';
-import {processMove, findCenterCube, filterCubes, oppositeMove} from '../cube';
+import {
+  processMove,
+  findCenterCube,
+  filterCubes,
+  oppositeMove,
+  getBaseColorFace,
+  topLayerMovesFromTo,
+} from '../cube';
 
-export function solveFirstCross(cubes) {
+function _isSolvedFirstCross(cubes, baseColorFace) {
+  const {'matchedCubes': correctFirstCrossCubes} = filterCubes(cubes, {
+    'type': 'edge',
+    'faceFilter': [
+      {
+        [baseColorFace]: {},
+      },
+    ],
+    'correct': true,
+  });
+  return correctFirstCrossCubes.length === 4;
+}
+
+export function solveFirstCross(cubes, baseColor) {
+  /* check if first cross solved */
+  const baseColorFace = getBaseColorFace(cubes, baseColor);
+  if (_isSolvedFirstCross(cubes, baseColorFace)) {
+    return false;
+  }
+
   const topCenter = findCenterCube(cubes, [FACE.U]);
   const topCenterColor = topCenter.faceColors[FACE.U];
 
@@ -60,7 +86,7 @@ export function solveFirstCross(cubes) {
       },
     }) ;
     const targetFaceOfEdge = _.findKey(otherCenter[0].faceColors, () => true);
-    const topLayerMoves = _topLayerMovesFromTo(targetFaceOfEdge, otherFaceOfEdge);
+    const topLayerMoves = topLayerMovesFromTo(targetFaceOfEdge, otherFaceOfEdge);
     moves.push(...topLayerMoves);
     moves.push(otherFaceOfEdge === FACE.L ? 'l' : 'R');
     moves.push(...topLayerMoves.map(oppositeMove));
@@ -101,7 +127,7 @@ export function solveFirstCross(cubes) {
       'correct': false,
     });
     const availableFace = _.without(_.keys(availableTopCubes[0].faceColors), FACE.U)[0];
-    const topLayerMoves = _topLayerMovesFromTo(availableFace, nonDownFace);
+    const topLayerMoves = topLayerMovesFromTo(availableFace, nonDownFace);
     moves.push(...topLayerMoves);
     moves.push(nonDownFace === FACE.L ? 'l' : 'R');
     moves.push(...topLayerMoves.map(oppositeMove));
@@ -135,13 +161,6 @@ export function solveFirstCross(cubes) {
   }
 
   return [];
-}
-
-function _topLayerMovesFromTo(fromFace, toFace) {
-  const faceIdMap = {[FACE.F]: 1, [FACE.L]: 2, [FACE.B]: 3, [FACE.R]: 4};
-  const faceDifference = (faceIdMap[fromFace] - faceIdMap[toFace] + 4) % 4;
-  const moves = [[], ['u'], ['u', 'u'], ['U']];
-  return moves[faceDifference];
 }
 
 function _movesForBestFirstCrossAlignment(cubes) {

@@ -25,3 +25,10 @@ export function solve() {
     'type': CUBE.SOLVE,
   }
 }
+
+export function setBaseColor(color) {
+  return {
+    'type': CUBE.SET_BASE_COLOR,
+    'color': color,
+  }
+}

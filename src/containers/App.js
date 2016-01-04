@@ -4,6 +4,7 @@
  *          This modifications only run once when the generator is invoked - if
  *          you edit them, they are not updated again.
  */
+import _ from 'lodash';
 import React, {
   Component,
   PropTypes,
@@ -12,6 +13,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as CubeActions from '../actions/CubeActions';
+
+import {FACE} from '../constants/Cube';
+
+import {filterCubes} from '../utils/cube';
 
 import {
   Grid,
@@ -42,10 +47,38 @@ class App extends Component {
           addMove={addMove}
           reset={reset}
           solve={solve}
+          setTopAsBaseColor={this.setTopAsBaseColor}
           setInitialMoves={setInitialMoves} />
         <RubikCubePanel cube={cube} />
       </Grid>
     );
+  }
+
+  constructor(props) {
+    super(props);
+    this.setTopAsBaseColor = this.setTopAsBaseColor.bind(this);
+  }
+
+  setTopAsBaseColor() {
+    const {
+      'cube': {
+        cubes,
+      },
+      'actions': {
+        'cube': {
+          setBaseColor,
+        },
+      },
+    } = this.props;
+    const {'matchedCubes': topCenter} = filterCubes(cubes, {
+      'type': 'center',
+      'faceFilter': [
+        {
+          [FACE.U]: {},
+        },
+      ],
+    });
+    setBaseColor(_.values(topCenter[0].faceColors)[0]);
   }
 }
 /* Populated by react-webpack-redux:reducer

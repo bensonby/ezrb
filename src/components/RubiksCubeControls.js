@@ -39,6 +39,7 @@ class RubiksCubeControl extends Component {
       reset,
       solve,
       moves,
+      setTopAsBaseColor,
     } = this.props;
 
     return (
@@ -47,6 +48,7 @@ class RubiksCubeControl extends Component {
           <Col xs={12}>
             <Button bsStyle="danger" onClick={reset}>Reset</Button>
             <Button bsStyle="danger" onClick={this.scramble}>Scramble</Button>
+            <Button bsStyle="danger" onClick={setTopAsBaseColor}>Set Top Center as Base Color</Button>
             <Button bsStyle="danger" onClick={solve}>Solve</Button>
           </Col>
         </Row>

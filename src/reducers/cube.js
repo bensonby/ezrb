@@ -2,12 +2,14 @@ import _ from 'lodash';
 import {CUBE} from '../constants/ActionTypes';
 import * as CUBE_CONSTANTS from '../constants/Cube';
 import {solveFirstCross} from '../utils/solver/firstCross';
+import {solveMiddleEdges} from '../utils/solver/middleEdges';
 import {processMove} from '../utils/cube';
 
 const defaultState = {
   'initialMoves': [],
   'moves': [],
   'cubes': CUBE_CONSTANTS.CUBES,
+  'baseColor': null,
 };
 
 export default function(state = defaultState, action) {
@@ -19,6 +21,7 @@ export default function(state = defaultState, action) {
     });
   case CUBE.RESET:
     return _.assign({}, state, {
+      'baseColor': null,
       'initialMoves': [],
       'moves': [],
       'cubes': CUBE_CONSTANTS.CUBES,
@@ -33,9 +36,18 @@ export default function(state = defaultState, action) {
       'moves': [],
       'cubes': cubes,
     });
+  case CUBE.SET_BASE_COLOR:
+    return _.assign({}, state, {
+      'baseColor': action.color,
+    });
   case CUBE.SOLVE:
+    if (!state.baseColor) {
+      // TODO: error handling
+      return state;
+    }
     const moves = (
-      solveFirstCross(state.cubes) ||
+      solveFirstCross(state.cubes, state.baseColor) ||
+      solveMiddleEdges(state.cubes, state.baseColor) ||
       []
     );
     let newCube = state.cubes.slice();

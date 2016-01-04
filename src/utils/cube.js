@@ -133,6 +133,14 @@ export function findCenterCube(cubes, face) {
   return filterCubes(cubes, filter)['matchedCubes'][0];
 }
 
+export function findCenterFaceOfColor(cubes, color) {
+  const filter = {
+    'type': 'center',
+    'colorFilter': {[color]: true},
+  };
+  return _.keys(filterCubes(cubes, filter)['matchedCubes'][0].faceColors)[0];
+}
+
 export function oppositeMove(move) {
   const map = {
     'R': 'r',
@@ -149,4 +157,48 @@ export function oppositeMove(move) {
     'x': ',',
   };
   return map[move];
+}
+
+export function oppositeFace(face) {
+  const map = {
+    [CUBE_CONSTANTS.FACE.U]: CUBE_CONSTANTS.FACE.D,
+    [CUBE_CONSTANTS.FACE.D]: CUBE_CONSTANTS.FACE.U,
+    [CUBE_CONSTANTS.FACE.L]: CUBE_CONSTANTS.FACE.R,
+    [CUBE_CONSTANTS.FACE.R]: CUBE_CONSTANTS.FACE.L,
+    [CUBE_CONSTANTS.FACE.F]: CUBE_CONSTANTS.FACE.B,
+    [CUBE_CONSTANTS.FACE.B]: CUBE_CONSTANTS.FACE.F,
+  };
+  return map[face];
+}
+
+export function getBaseColorFace(cubes, baseColor) {
+  const {'matchedCubes': baseColorCenter} = filterCubes(cubes, {
+    'type': 'center',
+    'colorFilter': {
+      [baseColor]: true,
+    },
+  });
+  return _.keys(baseColorCenter[0].faceColors)[0];
+}
+
+export function horizontalFaceDifference(fromFace, toFace) {
+  const faceIdMap = {
+    [CUBE_CONSTANTS.FACE.F]: 1,
+    [CUBE_CONSTANTS.FACE.L]: 2,
+    [CUBE_CONSTANTS.FACE.B]: 3,
+    [CUBE_CONSTANTS.FACE.R]: 4,
+  };
+  return (faceIdMap[fromFace] - faceIdMap[toFace] + 4) % 4;
+}
+
+export function topLayerMovesFromTo(fromFace, toFace) {
+  const faceDifference = horizontalFaceDifference(fromFace, toFace);
+  const moves = [[], ['u'], ['u', 'u'], ['U']];
+  return moves[faceDifference];
+}
+
+export function rotateCubeHorizontallyFromTo(fromFace, toFace) {
+  const faceDifference = horizontalFaceDifference(fromFace, toFace);
+  const moves = [[], ['x'], ['x', 'x'], [',']];
+  return moves[faceDifference];
 }

@@ -21,7 +21,7 @@ var RubiksCube = class {
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera( 30, 1, 0.1, 1000 );
     this.renderer = new THREE.WebGLRenderer();
-    this.rotationSpeed = 0.05;
+    this.rotationSpeed = 0.1;
 
     this.textureImages = [
       textureBlack,
